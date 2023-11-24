@@ -1,0 +1,10 @@
+20001;Carlos Rolando;Mendo Bravo;999888777;07554084
+20002;David Elías;Espinoza Sandoval;987654321;04239547
+20003;Nelly Rocío;Uribe Chois;973852104;06779523
+20004;David Jesús;Ramírez Salinas;900800700;82661732
+20005;Pedro Pablo;Dávalos Rivera;998877665;21958924
+20006;María del Carmen;Olivera Aramayo;925731670;10026348
+20007;Melissa Fabiola;Ferrero Alvarado;973091126;18833765
+20008;Roberto Carlos;Miró Valencia;910557299;02283994
+20009;Gerardo Abel;Talavera Díaz;973293991;12149894
+20010;Juan José;Ferrari Cavassa;902854127;17399243
