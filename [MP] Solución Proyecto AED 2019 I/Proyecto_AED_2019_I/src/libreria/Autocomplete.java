@@ -20,8 +20,7 @@ public class Autocomplete implements DocumentListener {
 
   public static enum Mode {
     INSERT,
-    COMPLETION,
-    MATCH
+    COMPLETION
   };
 
   private JTextField textField;
@@ -39,10 +38,12 @@ public class Autocomplete implements DocumentListener {
   }
 
   @Override
-  public void changedUpdate(DocumentEvent ev) { }
+  public void changedUpdate(DocumentEvent ev) { 
+  }
 
   @Override
-  public void removeUpdate(DocumentEvent ev) { }
+  public void removeUpdate(DocumentEvent ev) { 
+  }
 
   @Override
   public void insertUpdate(DocumentEvent ev) {
@@ -69,18 +70,17 @@ public class Autocomplete implements DocumentListener {
         
     if(prefix.isEmpty())
         n = 0;
+    
     if (n < 0 && -n <= keywords.size()) {
       String match = keywords.get(-n - 1);
       if (match.startsWith(prefix)) {
         // A completion is found
         String completion = match.substring(pos - w);
+        
         // We cannot modify Document from within notification,
         // so we submit a task that does the change later
         SwingUtilities.invokeLater(new CompletionTask(completion, pos + 1));
       }
-    }
-    if(keywords.contains(prefix)){
-        mode = Mode.MATCH;
     }
     else {
       // Nothing found
@@ -100,8 +100,8 @@ public class Autocomplete implements DocumentListener {
         sb.insert(pos, "");
         textField.setText(sb.toString());
         textField.setCaretPosition(pos);
-        mode = Mode.INSERT;
-      } else {
+      } 
+      else {
         textField.replaceSelection("\t");
       }
     }

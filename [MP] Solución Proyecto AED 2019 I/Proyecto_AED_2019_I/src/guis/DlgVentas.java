@@ -82,6 +82,12 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         private boolean flagClienteExiste = false;
         private boolean flagProductoExiste = false;
         private boolean flagVendedorExiste = false;
+        ArrayList<String> txtCuerpoProductoKeyWords = new ArrayList<String>();
+        ArrayList<String> txtCuerpoClienteKeyWords = new ArrayList<String>();
+        ArrayList<String> txtCuerpoVendedorKeyWords = new ArrayList<String>();
+        Autocomplete autoCompleteProducto;
+        Autocomplete autoCompleteCliente;
+        Autocomplete autoCompleteVendedor;
 
 	/**
 	 * Launch the application.
@@ -173,7 +179,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         lblCuerpoProducto.setBounds(25, 240, 300, 23);
         getContentPane().add(lblCuerpoProducto);
         
-        lblCuerpoPrecio = new JLabel("Precio: ");
+        lblCuerpoPrecio = new JLabel("Precio(S/.): ");
         lblCuerpoPrecio.setBounds(25, 320, 300, 23);
         getContentPane().add(lblCuerpoPrecio);
         
@@ -185,27 +191,13 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         txtCuerpoProducto.setBounds(150, 240, 100, 23);
         getContentPane().add(txtCuerpoProducto);
         txtCuerpoProducto.setColumns(10);
-        ArrayList<String> txtCuerpoProductoKeyWords = new ArrayList<String>();
+        
         txtCuerpoProducto.setFocusTraversalKeysEnabled(false);
-        Autocomplete autoCompleteProducto = new Autocomplete(txtCuerpoProducto, txtCuerpoProductoKeyWords);
+        autoCompleteProducto = new Autocomplete(txtCuerpoProducto, txtCuerpoProductoKeyWords);
         txtCuerpoProducto.getDocument().addDocumentListener(autoCompleteProducto);
         txtCuerpoProducto.getInputMap().put(KeyStroke.getKeyStroke("TAB"), "commit");
         txtCuerpoProducto.getActionMap().put("commit", autoCompleteProducto.new CommitAction());
-        
-        txtCuerpoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                String textoBusquedaProductos = txtCuerpoProducto.getText() + evt.getKeyChar();
-                System.out.println("Texto ingresado: " + textoBusquedaProductos);
-                if(!textoBusquedaProductos.isEmpty()){
-                    
-                    ArrayList<Producto> listaProductos = DBUtils.parsearListaProducto(DBUtils.buscarDataCodigo("productos", textoBusquedaProductos));
-                    for (Producto producto : listaProductos) {
-                        txtCuerpoProductoKeyWords.clear();
-                        txtCuerpoProductoKeyWords.add(String.valueOf(producto.getCodigoProducto()));
-                    }                    
-                }                
-            }
-        });
+        txtCuerpoProducto.addKeyListener(this);
         
         txtCuerpoPrecio = new JTextField();
         txtCuerpoPrecio.setBounds(150, 320, 100, 23);
@@ -230,51 +222,27 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         txtCuerpoCliente.setBounds(450, 240, 100, 23);
         getContentPane().add(txtCuerpoCliente);
         txtCuerpoCliente.setColumns(10);
-        ArrayList<String> txtCuerpoClienteKeyWords = new ArrayList<String>();
+        
         txtCuerpoCliente.setFocusTraversalKeysEnabled(false);
-        Autocomplete autoCompleteCliente = new Autocomplete(txtCuerpoCliente, txtCuerpoClienteKeyWords);
+        autoCompleteCliente = new Autocomplete(txtCuerpoCliente, txtCuerpoClienteKeyWords);
         txtCuerpoCliente.getDocument().addDocumentListener(autoCompleteCliente);
         txtCuerpoCliente.getInputMap().put(KeyStroke.getKeyStroke("TAB"), "commit");
         txtCuerpoCliente.getActionMap().put("commit", autoCompleteCliente.new CommitAction());
-        
-        txtCuerpoCliente.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                String textoBusquedaClientes = txtCuerpoCliente.getText() + evt.getKeyChar();
-                System.out.println("Texto ingresado: " + textoBusquedaClientes);
-                if(!textoBusquedaClientes.isEmpty()){
-                    ArrayList<Cliente> listaClientes = DBUtils.parsearListaCliente(DBUtils.buscarDataCodigo("clientes", textoBusquedaClientes));
-                    for (Cliente cliente : listaClientes) {
-                        txtCuerpoClienteKeyWords.clear();
-                        txtCuerpoClienteKeyWords.add(String.valueOf(cliente.getCodigoCliente()));
-                    }                    
-                }                
-            }
-        });
+        txtCuerpoCliente.addKeyListener(this);
         
         txtCuerpoVendedor = new JTextField();
         txtCuerpoVendedor.setBounds(450, 320, 100, 23);
         getContentPane().add(txtCuerpoVendedor);
         txtCuerpoVendedor.setColumns(10);
-        ArrayList<String> txtCuerpoVendedorKeyWords = new ArrayList<String>();
+        
         txtCuerpoVendedor.setFocusTraversalKeysEnabled(false);
-        Autocomplete autoCompleteVendedor = new Autocomplete(txtCuerpoVendedor, txtCuerpoVendedorKeyWords);
+        autoCompleteVendedor = new Autocomplete(txtCuerpoVendedor, txtCuerpoVendedorKeyWords);
         txtCuerpoVendedor.getDocument().addDocumentListener(autoCompleteVendedor);
         txtCuerpoVendedor.getInputMap().put(KeyStroke.getKeyStroke("TAB"), "commit");
         txtCuerpoVendedor.getActionMap().put("commit", autoCompleteVendedor.new CommitAction());
+        txtCuerpoVendedor.addKeyListener(this);
         
-        txtCuerpoVendedor.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                String textoBusquedaVendedores = txtCuerpoVendedor.getText() + evt.getKeyChar();
-                System.out.println("Texto ingresado: " + textoBusquedaVendedores);
-                if(!textoBusquedaVendedores.isEmpty()){
-                    ArrayList<Vendedor> listaVendedores = DBUtils.parsearListaVendedor(DBUtils.buscarDataCodigo("vendedores", textoBusquedaVendedores));
-                    for (Vendedor vendedor : listaVendedores) {
-                        txtCuerpoVendedorKeyWords.clear();
-                        txtCuerpoVendedorKeyWords.add(String.valueOf(vendedor.getCodigoVendedor()));
-                    }                    
-                }                
-            }
-        });
+        
         
         txtCuerpoTotal = new JTextField();
         txtCuerpoTotal.setBounds(150, 240, 100, 23);
@@ -489,9 +457,48 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         
 	public void keyPressed(KeyEvent arg0) {
 	}
-	public void keyReleased(KeyEvent arg0) {
-		arg0.consume();
-		editarFila();		
+	public void keyReleased(KeyEvent arg) {
+            if (arg.getSource() == txtCuerpoProducto) {
+                String textoBusquedaProductos = txtCuerpoProducto.getText();
+                System.out.println("Texto ingresado: " + textoBusquedaProductos);
+                if(!textoBusquedaProductos.isEmpty()){
+                    
+                    ArrayList<Producto> listaProductos = DBUtils.parsearListaProducto(DBUtils.buscarDataCodigo("productos", textoBusquedaProductos));
+                    txtCuerpoProductoKeyWords.clear();
+                    for (Producto producto : listaProductos) {                        
+                        txtCuerpoProductoKeyWords.add(String.valueOf(producto.getCodigoProducto()));
+                    }                 
+                    
+                }  
+            }
+            else if (arg.getSource() == txtCuerpoCliente) {
+                String textoBusquedaClientes = txtCuerpoCliente.getText();
+                System.out.println("Texto ingresado: " + textoBusquedaClientes);
+                if(!textoBusquedaClientes.isEmpty()){
+                    ArrayList<Cliente> listaClientes = DBUtils.parsearListaCliente(DBUtils.buscarDataCodigo("clientes", textoBusquedaClientes));
+                    txtCuerpoClienteKeyWords.clear();
+                    for (Cliente cliente : listaClientes) {                        
+                        txtCuerpoClienteKeyWords.add(String.valueOf(cliente.getCodigoCliente()));
+                    }                    
+                    
+                }
+            }
+            else if (arg.getSource() == txtCuerpoVendedor) {
+                String textoBusquedaVendedores = txtCuerpoVendedor.getText();
+                System.out.println("Texto ingresado: " + textoBusquedaVendedores);
+                if(!textoBusquedaVendedores.isEmpty()){
+                    ArrayList<Vendedor> listaVendedores = DBUtils.parsearListaVendedor(DBUtils.buscarDataCodigo("vendedores", textoBusquedaVendedores));
+                    txtCuerpoVendedorKeyWords.clear();
+                    for (Vendedor vendedor : listaVendedores) {                        
+                        txtCuerpoVendedorKeyWords.add(String.valueOf(vendedor.getCodigoVendedor()));
+                    }                    
+                }
+            }
+            else{
+                arg.consume();
+		editarFila();	
+            }
+			
 	}
 	public void keyTyped(KeyEvent arg0) {
 	}
