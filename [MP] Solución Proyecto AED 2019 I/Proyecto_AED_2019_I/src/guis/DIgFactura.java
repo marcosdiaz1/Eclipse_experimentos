@@ -55,7 +55,7 @@ public class DIgFactura extends JDialog implements ActionListener, KeyListener, 
 	private JButton btnAdicionar;
 	private JButton btnModificar;
 	private JButton btnEliminar;
-	private JTable tblVendedores;
+	private JTable tblFacturas;
 	private DefaultTableModel modelo;
         private ArrayList<Factura> lstFacturas = new ArrayList<>();
 
@@ -234,15 +234,15 @@ public class DIgFactura extends JDialog implements ActionListener, KeyListener, 
     //</editor-fold>
     
     void editarFila() {
-        if (lstfacturas.size() == 0)
+        if (lstFacturas.size() == 0)
                 limpieza();
         else {
-                Factura factura = lstFacturas.get(tblFacturas.getSelectedRow());
+                /*Factura factura = lstFacturas.get(tblFacturas.getSelectedRow());
                 txtCodigoFactura.setText(String.valueOf(factura.getCodigoFactura()));
                 txtCodigoProducto.setText(String.valueOf(factura.getProducto()));
                 txtCodigoVendedor.setText(String.valueOf(factura.getVendedor()));
-                txtUnidades.setText(factura.getUnidades());
-                txtPrecio.setText(factura.getPrecio());
+                txtUnidades.setText(String.valueOf(factura.getUnidades()));
+                txtPrecio.setText(String.valueOf(factura.getPrecio()));*/
         }
     }
     void limpieza() {
@@ -322,7 +322,7 @@ public class DIgFactura extends JDialog implements ActionListener, KeyListener, 
                                 codigoProducto, 
                                 codigoVendedor, 
                                 unidades,
-                                precio,);
+                                precio);
                         lstFacturas.add(factura);
 			guardar();
 			btnAdicionar.setEnabled(true);

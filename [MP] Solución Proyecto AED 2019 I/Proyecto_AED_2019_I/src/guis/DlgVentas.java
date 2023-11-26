@@ -2,8 +2,6 @@ package guis;
 
 import libreria.Lib;
 
-import clases.Cama;
-import arreglos.ArregloCamas;
 import clases.Vendedor;
 
 import java.awt.Color;
@@ -200,7 +198,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
                 System.out.println("Texto ingresado: " + textoBusquedaProductos);
                 if(!textoBusquedaProductos.isEmpty()){
                     txtCuerpoProductoKeyWords.clear();
-                    ArrayList<Vendedor> listaVendedores = DBUtils.parsearListaVendedor(DBUtils.cargarData("vendedores"));
+                    ArrayList<Vendedor> listaVendedores = DBUtils.parsearListaVendedor(DBUtils.buscarDataCodigo("vendedores", textoBusquedaProductos));
                     for (Vendedor vendedor : listaVendedores) {
                         txtCuerpoProductoKeyWords.add(String.valueOf(vendedor.getCodigoVendedor()));
                     }

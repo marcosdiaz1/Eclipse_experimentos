@@ -108,9 +108,4 @@ public class Vendedor {
                     this.getDni();
         return stringAlmacenamiento;
     }
-<<<<<<< Updated upstream
-
-=======
-    
->>>>>>> Stashed changes
 }
