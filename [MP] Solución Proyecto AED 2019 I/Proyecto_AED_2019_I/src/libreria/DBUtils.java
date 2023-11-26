@@ -33,17 +33,23 @@ public class DBUtils {
                     switch(target){
                         case "vendedores":
                             stringAlmacenamiento = ((Vendedor)object).generarStringAlmacenamiento();
+                            break;
                         case "productos":
                             stringAlmacenamiento = ((Producto)object).generarStringAlmacenamiento();
+                            break;
                         case "clientes":
                             stringAlmacenamiento = ((Cliente)object).generarStringAlmacenamiento();
+                            break;
                         case "facturas":
                             stringAlmacenamiento = ((Factura)object).generarStringAlmacenamiento();
+                            break;
                     }
                    
                     pw.println(stringAlmacenamiento);
-                    pw.close();
+                    
                 }
+                
+                pw.close();
             }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -63,18 +69,22 @@ public class DBUtils {
                         switch(target){
                             case "vendedores":
                                 lista.add(new Vendedor(linea));
+                                break;
                             case "productos":
                                 lista.add(new Producto(linea));
+                                break;
                             case "clientes":
                                 lista.add(new Cliente(linea));
+                                break;
                             case "facturas":
                                 lista.add(new Factura(linea));
+                                break;
                         }
                 }
                 br.close();
             }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error: "+ e.getMessage());
         }
         
         return lista;
@@ -89,24 +99,28 @@ public class DBUtils {
                     if(String.valueOf(vendedor.getCodigoVendedor()).contains(paramBusqueda))
                         matches.add(vendedor);
                 }
+                break;
             case "productos":
                 ArrayList<Producto> listaProducto = parsearListaProducto(cargarData(target));
                 for (Producto producto : listaProducto) {
                     if(String.valueOf(producto.getCodigoProducto()).contains(paramBusqueda))
                         matches.add(producto);
                 }
+                break;
             case "clientes":
                 ArrayList<Cliente> listaCliente = parsearListaCliente(cargarData(target));
                 for (Cliente cliente : listaCliente) {
                     if(String.valueOf(cliente.getCodigoCliente()).contains(paramBusqueda))
                         matches.add(cliente);
                 }
+                break;
             case "facturas":
                 ArrayList<Factura> listaFactura = parsearListaFactura(cargarData(target));
                 for (Factura factura : listaFactura) {
-                    if(String.valueOf(factura.getCodigoVendedor()).contains(paramBusqueda))
+                    if(String.valueOf(factura.getCodigoFactura()).contains(paramBusqueda))
                         matches.add(factura);
                 }
+                break;
         }
         return matches;
     }
@@ -177,22 +191,22 @@ public class DBUtils {
                 if (lista.size() == 0)
                     return 2001;
 		else
-                    return ((Vendedor) lista.get(lista.size() - 1)).getCodigoVendedor();
+                    return ((Vendedor) lista.get(lista.size() - 1)).getCodigoVendedor()  + 1;
             case "productos":
                 if (lista.size() == 0)
                     return 3001;
 		else
-                    return ((Producto) lista.get(lista.size() - 1)).getCodigoProducto();
+                    return ((Producto) lista.get(lista.size() - 1)).getCodigoProducto()  + 1;
             case "clientes":
                 if (lista.size() == 0)
                     return 1001;
 		else
-                    return ((Cliente) lista.get(lista.size() - 1)).getCodigoCliente();
+                    return ((Cliente) lista.get(lista.size() - 1)).getCodigoCliente()  + 1;
             case "facturas":
                 if (lista.size() == 0)
                     return 4001;
 		else
-                    return ((Factura) lista.get(lista.size() - 1)).getCodigoFactura();
+                    return ((Factura) lista.get(lista.size() - 1)).getCodigoFactura() + 1;
         }
         return 0;
     } 

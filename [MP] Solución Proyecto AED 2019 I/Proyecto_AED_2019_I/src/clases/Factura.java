@@ -18,53 +18,67 @@ import libreria.DBUtils;
  */
 public class Factura {
     private int codigoFactura;
-    private int codigoProducto;
-    private int codigoVendedor;
-    private int codigoCliente;
-    private ArrayList<Producto> producto;
+    private Producto producto;
     private Vendedor vendedor;
     private Cliente cliente;
     private int unidades;
     private double precio;
+    private double total;
 
     public Factura(){}    
 
-    public Factura(int codigoFactura, int codigoProducto, int codigoVendedor, int codigoCliente, ArrayList<Producto> producto, Vendedor vendedor, Cliente cliente, int unidades, double precio) {
+    public Factura(int codigoFactura, Producto producto, Vendedor vendedor, Cliente cliente, int unidades, double precio, double total) {
         this.codigoFactura = codigoFactura;
-        this.codigoProducto = codigoProducto;
-        this.codigoVendedor = codigoVendedor;
-        this.codigoCliente = codigoCliente;
         this.producto = producto;
         this.vendedor = vendedor;
         this.cliente = cliente;
         this.unidades = unidades;
         this.precio = precio;
+        this.total = total;
     }
 
     public Factura(String param) {
         String[] stringCarga = param.split(";");
         
         this.setCodigoFactura(Integer.parseInt(stringCarga[0].trim()));
-        this.setCodigoProducto(Integer.parseInt(stringCarga[1].trim()));
-        this.setCodigoCliente(Integer.parseInt(stringCarga[2].trim()));
-        this.setUnidades(Integer.parseInt(stringCarga[3].trim()));
-        this.setPrecio(Integer.parseInt(stringCarga[4].trim()));
+        ArrayList<Producto> lstProducto = DBUtils.parsearListaProducto(DBUtils.buscarDataCodigo("productos", String.valueOf(stringCarga[1].trim())));
+        if(lstProducto.size() == 1){
+            this.producto = lstProducto.get(0);
+        }
+        else{
+            this.producto = new Producto();
+        }
         
-        this.setProducto(DBUtils.parsearListaProducto(DBUtils.buscarDataCodigo("productos", String.valueOf(this.getCodigoProducto()))));
-        
-        ArrayList<Vendedor> lstVendedor = DBUtils.parsearListaVendedor(DBUtils.buscarDataCodigo("vendedores", String.valueOf(this.getCodigoVendedor())));
+        ArrayList<Vendedor> lstVendedor = DBUtils.parsearListaVendedor(DBUtils.buscarDataCodigo("vendedores", String.valueOf(stringCarga[2].trim())));
         if(lstVendedor.size() == 1){
             this.vendedor = lstVendedor.get(0);
         }
+        else{
+            this.vendedor = new Vendedor();
+        }
         
-        ArrayList<Cliente> lstCliente = DBUtils.parsearListaCliente(DBUtils.buscarDataCodigo("clientes", String.valueOf(this.getCodigoCliente())));
-        if(lstVendedor.size() == 1){
+        ArrayList<Cliente> lstCliente = DBUtils.parsearListaCliente(DBUtils.buscarDataCodigo("clientes", String.valueOf(stringCarga[3].trim())));
+        if(lstCliente.size() == 1){
             this.cliente = lstCliente.get(0);
         }
+        else{
+            this.cliente = new Cliente();
+        }
+        this.setUnidades(Integer.parseInt(stringCarga[4].trim()));
+        this.setPrecio(Double.parseDouble(stringCarga[5].trim()));
+        this.setTotal(Double.parseDouble(stringCarga[6].trim()));
         
         
     }
 
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+    
     public int getCodigoFactura() {
         return codigoFactura;
     }
@@ -73,35 +87,11 @@ public class Factura {
         this.codigoFactura = codigoFactura;
     }
 
-    public int getCodigoProducto() {
-        return codigoProducto;
-    }
-
-    public void setCodigoProducto(int codigoProducto) {
-        this.codigoProducto = codigoProducto;
-    }
-
-    public int getCodigoVendedor() {
-        return codigoVendedor;
-    }
-
-    public void setCodigoVendedor(int codigoVendedor) {
-        this.codigoVendedor = codigoVendedor;
-    }
-
-    public int getCodigoCliente() {
-        return codigoCliente;
-    }
-
-    public void setCodigoCliente(int codigoCliente) {
-        this.codigoCliente = codigoCliente;
-    }
-
-    public ArrayList<Producto> getProducto() {
+    public Producto getProducto() {
         return producto;
     }
 
-    public void setProducto(ArrayList<Producto> producto) {
+    public void setProducto(Producto producto) {
         this.producto = producto;
     }
 
@@ -136,19 +126,16 @@ public class Factura {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
-    	
-   
-    
-
     // Metodos Adicionales
 
     public String generarStringAlmacenamiento(){
         String stringAlmacenamiento = this.getCodigoFactura() + ";" +
-                    this.getCodigoProducto()+ ";" +
-                    this.getCodigoVendedor()+ ";" +
-                    this.getCodigoCliente()+ ";" +
+                    this.getProducto().getCodigoProducto()+ ";" +
+                    this.getVendedor().getCodigoVendedor()+ ";" +
+                    this.getCliente().getCodigoCliente()+ ";" +
                     this.getUnidades()+ ";" +
-                    this.getPrecio()+ ";" ;
+                    this.getPrecio()+ ";" +
+                    this.getTotal()+ ";" ;
         return stringAlmacenamiento;
     }       
         

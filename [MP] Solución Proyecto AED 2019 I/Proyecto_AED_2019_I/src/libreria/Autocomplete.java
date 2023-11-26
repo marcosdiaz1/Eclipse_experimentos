@@ -18,9 +18,10 @@ import javax.swing.text.BadLocationException;
 
 public class Autocomplete implements DocumentListener {
 
-  private static enum Mode {
+  public static enum Mode {
     INSERT,
-    COMPLETION
+    COMPLETION,
+    MATCH
   };
 
   private JTextField textField;
@@ -31,6 +32,10 @@ public class Autocomplete implements DocumentListener {
     this.textField = textField;
     this.keywords = keywords;
     Collections.sort(keywords);
+  }
+  
+  public Mode getMode(){
+      return mode;
   }
 
   @Override
@@ -61,6 +66,7 @@ public class Autocomplete implements DocumentListener {
 
     String prefix = content.substring(w + 1);
     int n = Collections.binarySearch(keywords, prefix);
+        
     if(prefix.isEmpty())
         n = 0;
     if (n < 0 && -n <= keywords.size()) {
@@ -72,7 +78,11 @@ public class Autocomplete implements DocumentListener {
         // so we submit a task that does the change later
         SwingUtilities.invokeLater(new CompletionTask(completion, pos + 1));
       }
-    } else {
+    }
+    if(keywords.contains(prefix)){
+        mode = Mode.MATCH;
+    }
+    else {
       // Nothing found
       mode = Mode.INSERT;
     }

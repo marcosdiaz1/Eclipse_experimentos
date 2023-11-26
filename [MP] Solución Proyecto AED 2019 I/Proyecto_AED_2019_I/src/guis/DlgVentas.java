@@ -1,5 +1,8 @@
 package guis;
 
+import clases.Cliente;
+import clases.Factura;
+import clases.Producto;
 import libreria.Lib;
 
 import clases.Vendedor;
@@ -63,13 +66,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         private JTextField txtCuerpoPrecio;
         private JTextField txtCuerpoCliente;
         private JTextField txtCuerpoVendedor;
-        
-	private JTextField txtCodigoVendedor;
-	private JTextField txtCategoria;
-	private JTextField txtNombres;
-        private JTextField txtApellidos;
-        private JTextField txtTelefono;
-        private JTextField txtDni;
+        private JTextField txtCuerpoTotal;
         //
 	private JScrollPane scrollPane;
         private JPanel jPanelCabecera;
@@ -78,10 +75,13 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 	private JButton btnAdicionar;
 	private JButton btnModificar;
 	private JButton btnEliminar;
-	private JTable tblCama;
+	private JTable tblVentas;
 	private DefaultTableModel modelo;
-        private ArrayList<Vendedor> lstVendedores = new ArrayList<>();
+        private ArrayList<Factura> lstFacturas = new ArrayList<>();
         private CompletionService<?> completionService;
+        private boolean flagClienteExiste = false;
+        private boolean flagProductoExiste = false;
+        private boolean flagVendedorExiste = false;
 
 	/**
 	 * Launch the application.
@@ -111,7 +111,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
             getContentPane().setLayout(null);
 
             //definirInputsMantenimiento();
-            //definirBotones();
+            definirBotones();
             definirColumnasGrilla();
             //Cabecera
             jPanelCabecera = new JPanel();
@@ -132,17 +132,17 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
             scrollPane.setBounds(10, 500, 1575, 250);
             getContentPane().add(scrollPane);
 
-            tblCama = new JTable();
-            tblCama.addKeyListener(this);
-            tblCama.addMouseListener(this);
-            tblCama.setFillsViewportHeight(true);
-            scrollPane.setViewportView(tblCama);           
+            tblVentas = new JTable();
+            tblVentas.addKeyListener(this);
+            tblVentas.addMouseListener(this);
+            tblVentas.setFillsViewportHeight(true);
+            scrollPane.setViewportView(tblVentas);           
 
-            tblCama.setModel(modelo);
+            tblVentas.setModel(modelo);
             ajustarAnchoColumnas();
-            /*listar();
+            listar();
             editarFila();
-            habilitarEntradas(false);*/
+            habilitarEntradas(false);
     }
     
     //<editor-fold defaultstate="collapsed" desc="Metodos Inicializacion">
@@ -187,21 +187,22 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         txtCuerpoProducto.setColumns(10);
         ArrayList<String> txtCuerpoProductoKeyWords = new ArrayList<String>();
         txtCuerpoProducto.setFocusTraversalKeysEnabled(false);
-        Autocomplete autoComplete = new Autocomplete(txtCuerpoProducto, txtCuerpoProductoKeyWords);
-        txtCuerpoProducto.getDocument().addDocumentListener(autoComplete);
+        Autocomplete autoCompleteProducto = new Autocomplete(txtCuerpoProducto, txtCuerpoProductoKeyWords);
+        txtCuerpoProducto.getDocument().addDocumentListener(autoCompleteProducto);
         txtCuerpoProducto.getInputMap().put(KeyStroke.getKeyStroke("TAB"), "commit");
-        txtCuerpoProducto.getActionMap().put("commit", autoComplete.new CommitAction());
+        txtCuerpoProducto.getActionMap().put("commit", autoCompleteProducto.new CommitAction());
         
         txtCuerpoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 String textoBusquedaProductos = txtCuerpoProducto.getText() + evt.getKeyChar();
                 System.out.println("Texto ingresado: " + textoBusquedaProductos);
                 if(!textoBusquedaProductos.isEmpty()){
-                    txtCuerpoProductoKeyWords.clear();
-                    ArrayList<Vendedor> listaVendedores = DBUtils.parsearListaVendedor(DBUtils.buscarDataCodigo("vendedores", textoBusquedaProductos));
-                    for (Vendedor vendedor : listaVendedores) {
-                        txtCuerpoProductoKeyWords.add(String.valueOf(vendedor.getCodigoVendedor()));
-                    }
+                    
+                    ArrayList<Producto> listaProductos = DBUtils.parsearListaProducto(DBUtils.buscarDataCodigo("productos", textoBusquedaProductos));
+                    for (Producto producto : listaProductos) {
+                        txtCuerpoProductoKeyWords.clear();
+                        txtCuerpoProductoKeyWords.add(String.valueOf(producto.getCodigoProducto()));
+                    }                    
                 }                
             }
         });
@@ -229,11 +230,57 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         txtCuerpoCliente.setBounds(450, 240, 100, 23);
         getContentPane().add(txtCuerpoCliente);
         txtCuerpoCliente.setColumns(10);
+        ArrayList<String> txtCuerpoClienteKeyWords = new ArrayList<String>();
+        txtCuerpoCliente.setFocusTraversalKeysEnabled(false);
+        Autocomplete autoCompleteCliente = new Autocomplete(txtCuerpoCliente, txtCuerpoClienteKeyWords);
+        txtCuerpoCliente.getDocument().addDocumentListener(autoCompleteCliente);
+        txtCuerpoCliente.getInputMap().put(KeyStroke.getKeyStroke("TAB"), "commit");
+        txtCuerpoCliente.getActionMap().put("commit", autoCompleteCliente.new CommitAction());
+        
+        txtCuerpoCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                String textoBusquedaClientes = txtCuerpoCliente.getText() + evt.getKeyChar();
+                System.out.println("Texto ingresado: " + textoBusquedaClientes);
+                if(!textoBusquedaClientes.isEmpty()){
+                    ArrayList<Cliente> listaClientes = DBUtils.parsearListaCliente(DBUtils.buscarDataCodigo("clientes", textoBusquedaClientes));
+                    for (Cliente cliente : listaClientes) {
+                        txtCuerpoClienteKeyWords.clear();
+                        txtCuerpoClienteKeyWords.add(String.valueOf(cliente.getCodigoCliente()));
+                    }                    
+                }                
+            }
+        });
         
         txtCuerpoVendedor = new JTextField();
         txtCuerpoVendedor.setBounds(450, 320, 100, 23);
         getContentPane().add(txtCuerpoVendedor);
-        txtCuerpoVendedor.setColumns(10);    
+        txtCuerpoVendedor.setColumns(10);
+        ArrayList<String> txtCuerpoVendedorKeyWords = new ArrayList<String>();
+        txtCuerpoVendedor.setFocusTraversalKeysEnabled(false);
+        Autocomplete autoCompleteVendedor = new Autocomplete(txtCuerpoVendedor, txtCuerpoVendedorKeyWords);
+        txtCuerpoVendedor.getDocument().addDocumentListener(autoCompleteVendedor);
+        txtCuerpoVendedor.getInputMap().put(KeyStroke.getKeyStroke("TAB"), "commit");
+        txtCuerpoVendedor.getActionMap().put("commit", autoCompleteVendedor.new CommitAction());
+        
+        txtCuerpoVendedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                String textoBusquedaVendedores = txtCuerpoVendedor.getText() + evt.getKeyChar();
+                System.out.println("Texto ingresado: " + textoBusquedaVendedores);
+                if(!textoBusquedaVendedores.isEmpty()){
+                    ArrayList<Vendedor> listaVendedores = DBUtils.parsearListaVendedor(DBUtils.buscarDataCodigo("vendedores", textoBusquedaVendedores));
+                    for (Vendedor vendedor : listaVendedores) {
+                        txtCuerpoVendedorKeyWords.clear();
+                        txtCuerpoVendedorKeyWords.add(String.valueOf(vendedor.getCodigoVendedor()));
+                    }                    
+                }                
+            }
+        });
+        
+        txtCuerpoTotal = new JTextField();
+        txtCuerpoTotal.setBounds(150, 240, 100, 23);
+        txtCuerpoTotal.setVisible(false);
+        getContentPane().add(txtCuerpoTotal);
+        
         
     }
     
@@ -253,7 +300,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         btnAceptar.addActionListener(this);
         btnAceptar.addMouseListener(this);
         btnAceptar.setForeground(Color.BLUE);
-        btnAceptar.setBounds(700, 10, 150, 23);
+        btnAceptar.setBounds(620, 240, 150, 23);
         getContentPane().add(btnAceptar);
         
         btnAdicionar = new JButton("Adicionar");
@@ -282,47 +329,48 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
     
     //<editor-fold defaultstate="collapsed" desc="Metodos Genericos">
     public int calcularCorrelativo(){
-        return DBUtils.numeroCorrelativo(new ArrayList(lstVendedores) , "vendedores");
+        return DBUtils.numeroCorrelativo(new ArrayList(lstFacturas) , "facturas");
     }
     void listar() {
-        lstVendedores = DBUtils.parsearListaVendedor(DBUtils.cargarData("vendedores"));
+        lstFacturas = DBUtils.parsearListaFactura(DBUtils.cargarData("facturas"));
         int posFila = 0;
         if (modelo.getRowCount() > 0)
-                posFila = tblCama.getSelectedRow();
-        if (modelo.getRowCount() == lstVendedores.size()- 1)
-                posFila = lstVendedores.size() - 1;
-        if (posFila == lstVendedores.size())
+                posFila = tblVentas.getSelectedRow();
+        if (modelo.getRowCount() == lstFacturas.size()- 1)
+                posFila = lstFacturas.size() - 1;
+        if (posFila == lstFacturas.size())
                 posFila --;
         modelo.setRowCount(0);
-        Vendedor x;
-        for (int i=0; i<lstVendedores.size(); i++) {
-                x = lstVendedores.get(i);
-                Object[] fila = { x.getCodigoVendedor(), x.getCategoria(), x.getNombres(),x.getApellidos(), x.getTelefono(), x.getDni()};
+        Factura x;
+        for (int i=0; i<lstFacturas.size(); i++) {
+                x = lstFacturas.get(i);
+                Object[] fila = { i+1, x.getCliente().getNombres() + x.getCliente().getApellidos(), x.getVendedor().getNombres() + x.getVendedor().getApellidos(), x.getProducto().getDescripcion(),x.getPrecio(), x.getUnidades(), x.getTotal()};
                 modelo.addRow(fila);
         }
-        if (lstVendedores.size() > 0)
-                tblCama.getSelectionModel().setSelectionInterval(posFila, posFila);
+        if (lstFacturas.size() > 0)
+                tblVentas.getSelectionModel().setSelectionInterval(posFila, posFila);
     }
     void guardar() {
-            DBUtils.grabarData(new ArrayList(lstVendedores), "vendedores");
+            DBUtils.grabarData(new ArrayList(lstFacturas), "facturas");
     }
     //</editor-fold>
     
     void editarFila() {
-        if (lstVendedores.size() == 0)
+        if (lstFacturas.size() == 0)
                 limpieza();
         else {
-                Vendedor vendedor = lstVendedores.get(tblCama.getSelectedRow());
-                txtCodigoVendedor.setText(String.valueOf(vendedor.getCodigoVendedor()));
-                txtCategoria.setText(String.valueOf(vendedor.getCategoria()));
-                txtNombres.setText(vendedor.getNombres());
-                txtApellidos.setText(vendedor.getApellidos());
-                txtTelefono.setText(vendedor.getTelefono());
-                txtDni.setText(vendedor.getDni());
+                Factura factura = lstFacturas.get(tblVentas.getSelectedRow());
+                txtCuerpoProducto.setText(String.valueOf(factura.getProducto().getCodigoProducto()));
+                txtCuerpoCliente.setText(String.valueOf(factura.getCliente().getCodigoCliente()));
+                txtCuerpoVendedor.setText(String.valueOf(factura.getVendedor().getCodigoVendedor()));
+                txtCuerpoPrecio.setText(String.valueOf(factura.getPrecio()));
+                txtCuerpoUnidades.setText(String.valueOf(factura.getUnidades()));
+                txtCuerpoTotal.setText(String.valueOf(factura.getTotal()));
+                txtCabeceraNroSerie.setText(String.valueOf(factura.getCodigoFactura()));
         }
     }
     void limpieza() {
-            txtCodigoVendedor.setText(String.valueOf(calcularCorrelativo()));
+            txtCabeceraNroSerie.setText(String.valueOf(calcularCorrelativo()));
     }
     
     public void actionPerformed(ActionEvent arg) {
@@ -352,7 +400,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 	protected void actionPerformedBtnModificar(ActionEvent arg0) {
 		btnAdicionar.setEnabled(true);
 		btnModificar.setEnabled(false);
-		if (lstVendedores.size()== 0) {
+		if (lstFacturas.size()== 0) {
 			btnAceptar.setEnabled(false);
 			habilitarEntradas(false);
 			mensaje("No existen camas");	
@@ -367,55 +415,71 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 		btnAdicionar.setEnabled(true);
 		btnModificar.setEnabled(true);
 		btnAceptar.setEnabled(false);
-		if (lstVendedores.size()== 0)
+		if (lstFacturas.size()== 0)
 			mensaje("No existen camas");
 		else {
 			editarFila();
 			habilitarEntradas(false);
-                        Vendedor vendedorEliminar = new Vendedor();
-                        for (Vendedor vendedor : lstVendedores) {
-                            if(vendedor.getCodigoVendedor() == Integer.parseInt(txtCodigoVendedor.getText().trim()))
-                                vendedorEliminar = vendedor;
+                        Factura facturaEliminar = new Factura();
+                        for (Factura factura : lstFacturas) {
+                            if(factura.getCodigoFactura()== Integer.parseInt(txtCabeceraNroSerie.getText().trim()))
+                                facturaEliminar = factura;
                         }
                         
-                        lstVendedores.remove(vendedorEliminar);
+                        lstFacturas.remove(facturaEliminar);
 			guardar();
                         listar();
                         editarFila();
 		}
 	}
 	protected void actionPerformedBtnAceptar(ActionEvent arg0) {
-                
-                int codigoVendedor = Integer.parseInt(txtCodigoVendedor.getText().trim());
-                int categoria = Integer.parseInt(txtCategoria.getText().trim());
-                String nombres = txtNombres.getText().trim();
-                String apellidos = txtApellidos.getText().trim();
-                String telefono = txtTelefono.getText().trim();
-                String dni = txtDni.getText().trim();
+                int codigoFactura = Integer.parseInt(txtCabeceraNroSerie.getText().trim());
+                int codigoProducto = Integer.parseInt(txtCuerpoProducto.getText().trim());
+                int codigoCliente = Integer.parseInt(txtCuerpoCliente.getText().trim());
+                int codigoVendedor = Integer.parseInt(txtCuerpoVendedor.getText().trim());
+                double precio = Double.parseDouble(txtCuerpoPrecio.getText().trim());
+                int unidades = Integer.parseInt(txtCuerpoUnidades.getText().trim());
+                //Calcular Total
+                txtCuerpoTotal.setText(String.valueOf(precio*unidades));
+                double total = Double.parseDouble(txtCuerpoTotal.getText().trim());
 
 		
 		if (btnAdicionar.isEnabled() == false) {
-			Vendedor vendedor = new Vendedor(codigoVendedor, 
-                                categoria, 
-                                nombres, 
-                                apellidos,
-                                telefono,
-                                dni);
-                        lstVendedores.add(vendedor);
+			Factura factura = new Factura();
+                        factura.setCodigoFactura(codigoFactura);
+                        factura.setProducto(new Producto());
+                        factura.getProducto().setCodigoProducto(codigoProducto);
+                        
+                        factura.setCliente(new Cliente());
+                        factura.getCliente().setCodigoCliente(codigoCliente);
+                        
+                        factura.setVendedor(new Vendedor());
+                        factura.getVendedor().setCodigoVendedor(codigoVendedor);
+                        
+                        factura.setPrecio(precio);
+                        factura.setUnidades(unidades);
+                        factura.setTotal(total);
+                        lstFacturas.add(factura);
 			guardar();
 			btnAdicionar.setEnabled(true);
 		}
 		if (btnModificar.isEnabled() == false) {
-                        Vendedor vendedorModificar = new Vendedor();
-                        for (Vendedor vendedor : lstVendedores) {
-                            if(vendedor.getCodigoVendedor() == Integer.parseInt(txtCodigoVendedor.getText().trim()))
-                                vendedorModificar = vendedor;
+                        for (Factura factura : lstFacturas) {
+                            if(factura.getCodigoFactura() == Integer.parseInt(txtCabeceraNroSerie.getText().trim())){
+                                factura.setProducto(new Producto());
+                                factura.getProducto().setCodigoProducto(codigoProducto);
+
+                                factura.setCliente(new Cliente());
+                                factura.getCliente().setCodigoCliente(codigoCliente);
+
+                                factura.setVendedor(new Vendedor());
+                                factura.getVendedor().setCodigoVendedor(codigoVendedor);
+
+                                factura.setPrecio(precio);
+                                factura.setUnidades(unidades);
+                                factura.setTotal(total);
+                            }                                
                         }
-			vendedorModificar.setCategoria(categoria);
-                        vendedorModificar.setNombres(nombres);
-                        vendedorModificar.setApellidos(apellidos);
-                        vendedorModificar.setTelefono(telefono);
-                        vendedorModificar.setDni(dni);
 			guardar();
 			btnModificar.setEnabled(true);
 		}
@@ -432,7 +496,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 	public void keyTyped(KeyEvent arg0) {
 	}
 	public void mouseClicked(MouseEvent arg0) {
-		if (arg0.getSource() == tblCama) {
+		if (arg0.getSource() == tblVentas) {
 			mouseClickedTblCama(arg0);
 		}
 	}
@@ -449,8 +513,8 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 		if (arg0.getSource() == btnAdicionar) {
 			mouseEnteredBtnAdicionar(arg0);
 		}
-		if (arg0.getSource() == tblCama) {
-			mouseEnteredTblCama(arg0);
+		if (arg0.getSource() == tblVentas) {
+			mouseEnteredTblVentas(arg0);
 		}
 	}
 	public void mouseExited(MouseEvent arg0) {
@@ -464,8 +528,8 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 		habilitarBotones(true);
 		editarFila();
 	}
-	protected void mouseEnteredTblCama(MouseEvent arg0) {
-		tblCama.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	protected void mouseEnteredTblVentas(MouseEvent arg0) {
+		tblVentas.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	protected void mouseEnteredBtnAdicionar(MouseEvent arg0) {
 		btnAdicionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -481,13 +545,14 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 	}
 	//  M�todos tipo void (sin par�metros)
 	void ajustarAnchoColumnas() {
-		TableColumnModel tcm = tblCama.getColumnModel();
+		TableColumnModel tcm = tblVentas.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(anchoColumna(25));
 		tcm.getColumn(1).setPreferredWidth(anchoColumna(25));
 		tcm.getColumn(2).setPreferredWidth(anchoColumna(25)); 
 		tcm.getColumn(3).setPreferredWidth(anchoColumna(25));  
                 tcm.getColumn(4).setPreferredWidth(anchoColumna(25));
                 tcm.getColumn(5).setPreferredWidth(anchoColumna(25));
+                tcm.getColumn(6).setPreferredWidth(anchoColumna(25));
 	}
 	
 	//  M�todos tipo void (con par�metros)
