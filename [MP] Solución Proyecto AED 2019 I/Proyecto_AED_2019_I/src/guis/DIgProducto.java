@@ -2,9 +2,6 @@ package guis;
 
 import libreria.Lib;
 
-import clases.Cama;
-import arreglos.ArregloCamas;
-import clases.Vendedor;
 import clases.Producto;
 
 import java.awt.Color;
@@ -40,10 +37,12 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
         //
 	private JLabel lblCodigoProducto;
 	private JLabel lblDescripcion;
+	private JLabel lblUnidades;
 	private JLabel lblPrecio;
         //
 	private JTextField txtCodigoProducto;
 	private JTextField txtDescripcion;
+	private JTextField txtUnidades;
 	private JTextField txtPrecio;
         //
 	private JScrollPane scrollPane;
@@ -51,7 +50,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 	private JButton btnAdicionar;
 	private JButton btnModificar;
 	private JButton btnEliminar;
-	private JTable tblProducto;
+	private JTable tblProductos;
 	private DefaultTableModel modelo;
         private ArrayList<Producto> lstProductos = new ArrayList<>();
 
@@ -115,12 +114,16 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
         lblCodigoProducto.setBounds(10, 10, 110, 23);
         getContentPane().add(lblCodigoProducto);
 
-        lblProducto = new JLabel("Categoria");
-        lblProducto.setBounds(10, 40, 70, 23);
-        getContentPane().add(lblProducto);
+        lblCodigoProducto = new JLabel("Categoria");
+        lblCodigoProducto.setBounds(10, 40, 70, 23);
+        getContentPane().add(lblCodigoProducto);
 
         lblDescripcion = new JLabel("Descripcion");
         lblDescripcion.setBounds(350, 10, 70, 23);
+        getContentPane().add(lblDescripcion);
+        
+        lblUnidades= new JLabel("Unidades");
+        lblUnidades.setBounds(300, 60, 90, 23);
         getContentPane().add(lblDescripcion);
         
         lblPrecio = new JLabel("Precio");
@@ -138,6 +141,11 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
         getContentPane().add(txtDescripcion);
         txtDescripcion.setColumns(10);
         
+        txtUnidades = new JTextField();
+        txtUnidades.setBounds(380, 70, 100, 23);
+        getContentPane().add(txtUnidades);
+        txtUnidades.setColumns(10);
+        
         txtPrecio = new JTextField();
         txtPrecio.setBounds(430, 70, 200, 23);
         getContentPane().add(txtPrecio);
@@ -149,6 +157,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
         modelo = new DefaultTableModel();
         modelo.addColumn("CodigoProducto");
         modelo.addColumn("Descripcion");
+        modelo.addColumn("Unidades");
         modelo.addColumn("Precio");
     }
     
@@ -186,29 +195,29 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
     
     //<editor-fold defaultstate="collapsed" desc="Metodos Genericos">
     public int calcularCorrelativo(){
-        return DBUtils.numeroCorrelativo(new ArrayList(lstProducto) , "Producto");
+        return DBUtils.numeroCorrelativo(new ArrayList<>(lstProductos) , "Producto");
     }
     void listar() {
-        lstProducto = DBUtils.parsearListaVendedor(DBUtils.cargarData("vendedores"));
+        lstProductos = DBUtils.parsearListaProducto(DBUtils.cargarData("productos"));
         int posFila = 0;
         if (modelo.getRowCount() > 0)
-                posFila = tblProducto.getSelectedRow();
+                posFila = tblProductos.getSelectedRow();
         if (modelo.getRowCount() == lstProductos.size()- 1)
                 posFila = lstProductos.size() - 1;
         if (posFila == lstProductos.size())
                 posFila --;
         modelo.setRowCount(0);
-        Vendedor x;
+        Producto x;
         for (int i=0; i<lstProductos.size(); i++) {
                 x = lstProductos.get(i);
-                Object[] fila = { x.getCodigoVendedor(), x.getCategoria(), x.getNombres(),x.getApellidos(), x.getTelefono(), x.getDni()};
+                Object[] fila = { x.getCodigoProducto(), x.getDescripcion(), x.getUnidades(), x.getPrecio()};
                 modelo.addRow(fila);
         }
         if (lstProductos.size() > 0)
                 tblProductos.getSelectionModel().setSelectionInterval(posFila, posFila);
     }
     void guardar() {
-            DBUtils.grabarData(new ArrayList(lstProductos), "vendedores");
+            DBUtils.grabarData(new ArrayList<>(lstProductos), "producto");
     }
     //</editor-fold>
     
@@ -216,11 +225,19 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
         if (lstProductos.size() == 0)
                 limpieza();
         else {
-                Vendedor vendedor = lstProductos.get(tblProductos.getSelectedRow());
-                txtCodigoProducto.setText(String.valueOf(Producto.getCodigoProducto()));
-                txtDescripcion.setText(String.valueOf(descripcion.getdescripcion()));
-                txtPrecio.setText(Producto.getPrecio());
+        	int selectedRow = tblProductos.getSelectedRow();
+        	
+        	if(selectedRow!=-1 && selectedRow < lstProductos.size()) {
+                Producto producto = lstProductos.get(selectedRow);
+                txtCodigoProducto.setText(String.valueOf(producto.getCodigoProducto()));
+                txtDescripcion.setText(producto.getDescripcion());
+                txtUnidades.setText(producto.getUnidades());
+                txtPrecio.setText(String.valueOf(producto.getPrecio()));
+        } else {
+        	limpieza();
         }
+        }
+        
     }
     void limpieza() {
             txtCodigoProducto.setText(String.valueOf(calcularCorrelativo()));
@@ -256,7 +273,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 		if (lstProductos.size()== 0) {
 			btnAceptar.setEnabled(false);
 			habilitarEntradas(false);
-			mensaje("No existen camas");	
+			mensaje("No existen");	
 		}
 		else {
 			editarFila();
@@ -273,13 +290,13 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 		else {
 			editarFila();
 			habilitarEntradas(false);
-                        Vendedor vendedorEliminar = new Vendedor();
+                        Producto productoEliminar = new Producto();
                         for (Producto producto : lstProductos) {
                             if(producto.getCodigoProducto() == Integer.parseInt(txtCodigoProducto.getText().trim()))
                                 productoEliminar = producto;
                         }
                         
-                        lstProducto.remove(vendedorEliminar);
+                        lstProductos.remove(productoEliminar);
 			guardar();
                         listar();
                         editarFila();
@@ -289,13 +306,12 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
                 
                 int codigoProducto = Integer.parseInt(txtCodigoProducto.getText().trim());
                 int descripcion = Integer.parseInt(txtDescripcion.getText().trim());
-                String precio = txtPrecio.getText().trim();
+                int unidades = Integer.parseInt(txtUnidades.getText().trim());
+                double precio = Double.parseDouble(txtPrecio.getText().trim());
 
 		
 		if (btnAdicionar.isEnabled() == false) {
-			Producto producto = new Producto(codigoPrecio, 
-                                Descripcion,
-                                Precio);
+			Producto producto = new Producto(codigoProducto, descripcion, unidades, precio);
                         lstProductos.add(producto);
 			guardar();
 			btnAdicionar.setEnabled(true);
@@ -305,9 +321,11 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
                         for (Producto producto : lstProductos) {
                             if(producto.getCodigoProducto() == Integer.parseInt(txtCodigoProducto.getText().trim()))
                                 productoModificar = producto;
+                            break;
                         }
-                        productoModificar.setDescripcion(descripcion);
-                        productoModificar.setPrecio(precio);
+                        productoModificar.setUnidades(Integer.parseInt(unidades));
+                        productoModificar.setDescripcion(String(descripcion));
+                        productoModificar.setPrecio(Double.parseDouble(precio));
                         
 			guardar();
 			btnModificar.setEnabled(true);
@@ -316,6 +334,11 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 		habilitarEntradas(false);
 	}
         
+	private String String(int descripcion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public void keyPressed(KeyEvent arg0) {
 	}
 	public void keyReleased(KeyEvent arg0) {
@@ -342,7 +365,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 		if (arg0.getSource() == btnAdicionar) {
 			mouseEnteredBtnAdicionar(arg0);
 		}
-		if (arg0.getSource() == tblVendedores) {
+		if (arg0.getSource() == tblProductos) {
 			mouseEnteredTblVendedores(arg0);
 		}
 	}
@@ -377,10 +400,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 		TableColumnModel tcm = tblProductos.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(anchoColumna(25));
 		tcm.getColumn(1).setPreferredWidth(anchoColumna(25));
-		tcm.getColumn(2).setPreferredWidth(anchoColumna(25)); 
-		tcm.getColumn(3).setPreferredWidth(anchoColumna(25));  
-                tcm.getColumn(4).setPreferredWidth(anchoColumna(25));
-                tcm.getColumn(5).setPreferredWidth(anchoColumna(25));
+		tcm.getColumn(2).setPreferredWidth(anchoColumna(25));
 	}
 	
 	//  M�todos tipo void (con par�metros)

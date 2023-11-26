@@ -6,11 +6,8 @@
 package libreria;
 
 
-import clases.Cliente;
-import clases.Factura;
 import clases.Producto;
 import clases.Vendedor;
-import com.sun.security.ntlm.Client;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -33,12 +30,6 @@ public class DBUtils {
                     switch(target){
                         case "vendedores":
                             stringAlmacenamiento = ((Vendedor)object).generarStringAlmacenamiento();
-                        case "productos":
-                            stringAlmacenamiento = ((Producto)object).generarStringAlmacenamiento();
-                        case "clientes":
-                            stringAlmacenamiento = ((Cliente)object).generarStringAlmacenamiento();
-                        case "facturas":
-                            stringAlmacenamiento = ((Factura)object).generarStringAlmacenamiento();
                     }
                    
                     pw.println(stringAlmacenamiento);
@@ -57,18 +48,12 @@ public class DBUtils {
                 if(!file.exists())
                     file.createNewFile();
                 String linea;
-                String[] stringCarga;
+                String[] StringCarga;
                 BufferedReader br = new BufferedReader(new FileReader(target+".txt"));
                 while ((linea=br.readLine()) != null) {
                         switch(target){
                             case "vendedores":
                                 lista.add(new Vendedor(linea));
-                            case "productos":
-                                lista.add(new Producto(linea));
-                            case "clientes":
-                                lista.add(new Cliente(linea));
-                            case "facturas":
-                                lista.add(new Factura(linea));
                         }
                 }
                 br.close();
@@ -84,36 +69,17 @@ public class DBUtils {
         ArrayList<Object> matches = new ArrayList();
         switch(target){
             case "vendedores":
-                ArrayList<Vendedor> listaVendedor = parsearListaVendedor(cargarData(target));
-                for (Vendedor vendedor : listaVendedor) {
+                ArrayList<Vendedor> lista = parsearListaVendedor(cargarData(target));
+                for (Vendedor vendedor : lista) {
                     if(String.valueOf(vendedor.getCodigoVendedor()).contains(paramBusqueda))
                         matches.add(vendedor);
-                }
-            case "productos":
-                ArrayList<Producto> listaProducto = parsearListaProducto(cargarData(target));
-                for (Producto producto : listaProducto) {
-                    if(String.valueOf(producto.getCodigoProducto()).contains(paramBusqueda))
-                        matches.add(producto);
-                }
-            case "clientes":
-                ArrayList<Cliente> listaCliente = parsearListaCliente(cargarData(target));
-                for (Cliente cliente : listaCliente) {
-                    if(String.valueOf(cliente.getCodigoCliente()).contains(paramBusqueda))
-                        matches.add(cliente);
-                }
-            case "facturas":
-                ArrayList<Factura> listaFactura = parsearListaFactura(cargarData(target));
-                for (Factura factura : listaFactura) {
-                    if(String.valueOf(factura.getCodigoVendedor()).contains(paramBusqueda))
-                        matches.add(factura);
                 }
         }
         return matches;
     }
-    //</editor-fold>
+    //<editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos De Parseo Lista">
-    
     public static ArrayList<Vendedor> parsearListaVendedor(ArrayList<Object> param){
         ArrayList<Vendedor> listaVendedor = new ArrayList<>();
 
@@ -127,49 +93,7 @@ public class DBUtils {
         }
         return listaVendedor;
     }
-    
-    public static ArrayList<Factura> parsearListaFactura(ArrayList<Object> param){
-        ArrayList<Factura> listaFactura = new ArrayList<>();
-
-        for (Object obj : param) {
-            if (obj instanceof Factura) {
-                Factura factura = (Factura) obj;
-                listaFactura.add(factura);
-            } else {
-                System.out.println("Objeto no es una Factura: " + obj.toString());
-            }
-        }
-        return listaFactura;
-    }
-    
-    public static ArrayList<Producto> parsearListaProducto(ArrayList<Object> param){
-        ArrayList<Producto> listaProducto = new ArrayList<>();
-
-        for (Object obj : param) {
-            if (obj instanceof Producto) {
-                Producto producto = (Producto) obj;
-                listaProducto.add(producto);
-            } else {
-                System.out.println("Objeto no es un Producto: " + obj.toString());
-            }
-        }
-        return listaProducto;
-    }
-    
-    public static ArrayList<Cliente> parsearListaCliente(ArrayList<Object> param){
-        ArrayList<Cliente> listaCliente = new ArrayList<>();
-
-        for (Object obj : param) {
-            if (obj instanceof Cliente) {
-                Cliente cliente = (Cliente) obj;
-                listaCliente.add(cliente);
-            } else {
-                System.out.println("Objeto no es un CLiente: " + obj.toString());
-            }
-        }
-        return listaCliente;
-    }
-    //</editor-fold>
+    //<editor-fold>
     
     public static int numeroCorrelativo(ArrayList<Object> lista, String target) {
         switch(target){
@@ -178,22 +102,12 @@ public class DBUtils {
                     return 2001;
 		else
                     return ((Vendedor) lista.get(lista.size() - 1)).getCodigoVendedor();
-            case "productos":
-                if (lista.size() == 0)
-                    return 3001;
-		else
-                    return ((Producto) lista.get(lista.size() - 1)).getCodigoProducto();
-            case "clientes":
-                if (lista.size() == 0)
-                    return 1001;
-		else
-                    return ((Cliente) lista.get(lista.size() - 1)).getCodigoCliente();
-            case "facturas":
-                if (lista.size() == 0)
-                    return 4001;
-		else
-                    return ((Factura) lista.get(lista.size() - 1)).getCodigoFactura();
         }
         return 0;
-    } 
+    }
+
+	public static ArrayList<Producto> parsearListaProducto(ArrayList<Object> cargarData) {
+		// TODO Auto-generated method stub
+		return null;
+	} 
 }

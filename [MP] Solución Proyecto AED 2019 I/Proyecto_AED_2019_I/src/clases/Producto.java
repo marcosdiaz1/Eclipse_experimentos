@@ -18,13 +18,15 @@ import java.util.ArrayList;
 public class Producto {
     private int codigoProducto;
     private String descripcion;
+    private int unidades;
     private double precio;
 
     public Producto(){}
 
-    public Producto(int codigoProducto, String descripcion, double precio) {
+    public Producto(int codigoProducto, String descripcion, int unidades, double precio) {
         this.codigoProducto = codigoProducto;
         this.descripcion = descripcion;
+        this.unidades = unidades;
         this.precio = precio;
     }           
     
@@ -33,12 +35,21 @@ public class Producto {
         
         this.setCodigoProducto(Integer.parseInt(stringCarga[0].trim()));
         this.setDescripcion(stringCarga[1].trim());
-        this.setPrecio(stringCarga[2].trim());
+        this.setUnidades(Double.parseDouble(stringCarga[2].trim()));
+        this.setPrecio(Double.parseDouble(stringCarga[3].trim()));
 
     }
        
     
-    public int getCodigoProducto() {
+    public int getUnidades() {
+		return unidades;
+	}
+
+	public void setUnidades(int unidades) {
+		this.unidades = unidades;
+	}
+
+	public int getCodigoProducto() {
 		return codigoProducto;
 	}
 
@@ -67,6 +78,7 @@ public class Producto {
 	public String generarStringAlmacenamiento(){
         String stringAlmacenamiento = this.getCodigoProducto() + ";" +
                     this.getDescripcion()+ ";" +
+                    this.getUnidades()+";"+
                     this.getPrecio()+ ";" ;
         return stringAlmacenamiento;
     }
