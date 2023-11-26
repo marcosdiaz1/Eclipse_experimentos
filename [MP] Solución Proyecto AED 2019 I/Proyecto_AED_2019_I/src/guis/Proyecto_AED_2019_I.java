@@ -160,101 +160,12 @@ public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
                     dlgVendedores.setLocationRelativeTo(this);
                     dlgVendedores.setVisible(true);
                 }
-                // Viejo
-		if (e.getSource() == mntmInternamientosPagados) {
-			actionPerformedMntmInternamientosPagados(e);
-		}
-		if (e.getSource() == mntmInternamientosPendientes) {
-			actionPerformedMntmInternamientosPendientes(e);
-		}
-		if (e.getSource() == mntmAtencionesPagadas) {
-			actionPerformedMntmAtencionesPagadas(e);
-		}
-		if (e.getSource() == mntmAtencionesPendientes) {
-			actionPerformedMntmAtencionesPendientes(e);
-		}
-		if (e.getSource() == mntmInternamientos) {
-			actionPerformedMntmInternamientos(e);
-		}
-		if (e.getSource() == mntmAtenciones) {
-			actionPerformedMntmAtenciones(e);
-		}	
-		if (e.getSource() == mntmInternamiento) {
-			actionPerformedMntmInternamiento(e);
-		}
-		if (e.getSource() == mntmAtencion) {
-			actionPerformedMntmAtencion(e);
-		}
-		if (e.getSource() == mntmMedicina) {
-			actionPerformedMntmMedicina(e);
-		}
-		if (e.getSource() == mntmPaciente) {
-			actionPerformedMntmPaciente(e);
-		}
-		if (e.getSource() == mntmCama) {
-			actionPerformedMntmCama(e);
-		}
 		if (e.getSource() == mntmSalir) {
 			actionPerformedMntmSalir(e);
 		}
 	}
 	protected void actionPerformedMntmSalir(ActionEvent arg0) {
 		dispose();
-	}
-	protected void actionPerformedMntmCama(ActionEvent arg0) {
-		DlgCama dc = new DlgCama();
-		dc.setLocationRelativeTo(this);
-		dc.setVisible(true);
-	}
-	protected void actionPerformedMntmPaciente(ActionEvent arg0) {
-		DlgPaciente dp = new DlgPaciente();
-		dp.setLocationRelativeTo(this);
-		dp.setVisible(true);
-	}
-	protected void actionPerformedMntmMedicina(ActionEvent arg0) {
-		DlgMedicina dm = new DlgMedicina();
-		dm.setLocationRelativeTo(this);
-		dm.setVisible(true);
-	}
-	protected void actionPerformedMntmAtencion(ActionEvent arg0) {
-		DlgAtencion da = new DlgAtencion();
-		da.setLocationRelativeTo(this);
-		da.setVisible(true);
-	}
-	protected void actionPerformedMntmInternamiento(ActionEvent arg0) {
-		DlgInternamiento di = new DlgInternamiento();
-		di.setLocationRelativeTo(this);
-		di.setVisible(true);
-	}
-	protected void actionPerformedMntmAtenciones(ActionEvent arg0) {
-		DlgAtenciones da = new DlgAtenciones();
-		da.setLocationRelativeTo(this);
-		da.setVisible(true);
-	}
-	protected void actionPerformedMntmInternamientos(ActionEvent arg0) {
-		DlgInternamientos di = new DlgInternamientos();
-		di.setLocationRelativeTo(this);
-		di.setVisible(true);
-	}
-	protected void actionPerformedMntmAtencionesPendientes(ActionEvent arg0) {
-		DlgAtencionesPendientes dap = new DlgAtencionesPendientes();
-		dap.setLocationRelativeTo(this);
-		dap.setVisible(true);
-	}
-	protected void actionPerformedMntmAtencionesPagadas(ActionEvent arg0) {
-		DlgAtencionesPagadas dap = new DlgAtencionesPagadas();
-		dap.setLocationRelativeTo(this);
-		dap.setVisible(true);
-	}
-	protected void actionPerformedMntmInternamientosPendientes(ActionEvent arg0) {
-		DlgInternamientosPendientes dip = new DlgInternamientosPendientes();
-		dip.setLocationRelativeTo(this);
-		dip.setVisible(true);
-	}
-	protected void actionPerformedMntmInternamientosPagados(ActionEvent arg0) {
-		DlgInternamientosPagados dip = new DlgInternamientosPagados();
-		dip.setLocationRelativeTo(this);
-		dip.setVisible(true);
 	}
 	
 }

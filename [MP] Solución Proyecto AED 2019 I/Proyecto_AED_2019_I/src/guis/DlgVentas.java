@@ -344,7 +344,7 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
         Factura x;
         for (int i=0; i<lstFacturas.size(); i++) {
                 x = lstFacturas.get(i);
-                Object[] fila = { i+1, x.getCliente().getNombres() + x.getCliente().getApellidos(), x.getVendedor().getNombres() + x.getVendedor().getApellidos(), x.getProducto().getDescripcion(),x.getPrecio(), x.getUnidades(), x.getTotal()};
+                Object[] fila = { i+1, x.getCliente().getNombres() + " " + x.getCliente().getApellidos(), x.getVendedor().getNombres() + " " + x.getVendedor().getApellidos(), x.getProducto().getDescripcion(),"S/."+x.getPrecio(), x.getUnidades(), "S/."+x.getTotal()};
                 modelo.addRow(fila);
         }
         if (lstFacturas.size() > 0)
