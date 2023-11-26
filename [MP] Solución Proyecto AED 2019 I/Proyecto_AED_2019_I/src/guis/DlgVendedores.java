@@ -56,7 +56,7 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
 	private JButton btnAdicionar;
 	private JButton btnModificar;
 	private JButton btnEliminar;
-	private JTable tblCama;
+	private JTable tblVendedores;
 	private DefaultTableModel modelo;
         private ArrayList<Vendedor> lstVendedores = new ArrayList<>();
 
@@ -101,13 +101,13 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
             scrollPane.setBounds(10, 140, 1575, 550);
             getContentPane().add(scrollPane);
 
-            tblCama = new JTable();
-            tblCama.addKeyListener(this);
-            tblCama.addMouseListener(this);
-            tblCama.setFillsViewportHeight(true);
-            scrollPane.setViewportView(tblCama);           
+            tblVendedores = new JTable();
+            tblVendedores.addKeyListener(this);
+            tblVendedores.addMouseListener(this);
+            tblVendedores.setFillsViewportHeight(true);
+            scrollPane.setViewportView(tblVendedores);           
 
-            tblCama.setModel(modelo);
+            tblVendedores.setModel(modelo);
             ajustarAnchoColumnas();
             listar();
             editarFila();
