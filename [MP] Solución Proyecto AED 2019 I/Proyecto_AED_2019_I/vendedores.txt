@@ -1,1 +1,5 @@
+<<<<<<< Updated upstream
 2001;1;dylan;aa;aa;aa
+=======
+2001;1;marcos;diaz;1213213;12323132
+>>>>>>> Stashed changes

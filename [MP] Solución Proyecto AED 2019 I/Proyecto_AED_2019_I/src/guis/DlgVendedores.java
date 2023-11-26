@@ -2,8 +2,6 @@ package guis;
 
 import libreria.Lib;
 
-import clases.Cama;
-import arreglos.ArregloCamas;
 import clases.Vendedor;
 
 import java.awt.Color;
