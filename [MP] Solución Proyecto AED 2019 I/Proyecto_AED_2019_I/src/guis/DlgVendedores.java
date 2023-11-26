@@ -341,16 +341,15 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
 			btnAdicionar.setEnabled(true);
 		}
 		if (btnModificar.isEnabled() == false) {
-                        Vendedor vendedorModificar = new Vendedor();
                         for (Vendedor vendedor : lstVendedores) {
-                            if(vendedor.getCodigoVendedor() == Integer.parseInt(txtCodigoVendedor.getText().trim()))
-                                vendedorModificar = vendedor;
+                            if(vendedor.getCodigoVendedor() == Integer.parseInt(txtCodigoVendedor.getText().trim())){
+                                vendedor.setCategoria(categoria);
+                                vendedor.setNombres(nombres);
+                                vendedor.setApellidos(apellidos);
+                                vendedor.setTelefono(telefono);
+                                vendedor.setDni(dni);
+                            }                                
                         }
-			vendedorModificar.setCategoria(categoria);
-                        vendedorModificar.setNombres(nombres);
-                        vendedorModificar.setApellidos(apellidos);
-                        vendedorModificar.setTelefono(telefono);
-                        vendedorModificar.setDni(dni);
 			guardar();
 			btnModificar.setEnabled(true);
 		}
