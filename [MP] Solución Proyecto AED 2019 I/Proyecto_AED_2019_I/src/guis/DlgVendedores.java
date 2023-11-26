@@ -225,7 +225,7 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
         lstVendedores = DBUtils.parsearListaVendedor(DBUtils.cargarData("vendedores"));
         int posFila = 0;
         if (modelo.getRowCount() > 0)
-                posFila = tblCama.getSelectedRow();
+                posFila = tblVendedores.getSelectedRow();
         if (modelo.getRowCount() == lstVendedores.size()- 1)
                 posFila = lstVendedores.size() - 1;
         if (posFila == lstVendedores.size())
@@ -238,7 +238,7 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
                 modelo.addRow(fila);
         }
         if (lstVendedores.size() > 0)
-                tblCama.getSelectionModel().setSelectionInterval(posFila, posFila);
+                tblVendedores.getSelectionModel().setSelectionInterval(posFila, posFila);
     }
     void guardar() {
             DBUtils.grabarData(new ArrayList(lstVendedores), "vendedores");
@@ -249,7 +249,7 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
         if (lstVendedores.size() == 0)
                 limpieza();
         else {
-                Vendedor vendedor = lstVendedores.get(tblCama.getSelectedRow());
+                Vendedor vendedor = lstVendedores.get(tblVendedores.getSelectedRow());
                 txtCodigoVendedor.setText(String.valueOf(vendedor.getCodigoVendedor()));
                 txtCategoria.setText(String.valueOf(vendedor.getCategoria()));
                 txtNombres.setText(vendedor.getNombres());
@@ -369,7 +369,7 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
 	public void keyTyped(KeyEvent arg0) {
 	}
 	public void mouseClicked(MouseEvent arg0) {
-		if (arg0.getSource() == tblCama) {
+		if (arg0.getSource() == tblVendedores) {
 			mouseClickedTblCama(arg0);
 		}
 	}
@@ -386,8 +386,8 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
 		if (arg0.getSource() == btnAdicionar) {
 			mouseEnteredBtnAdicionar(arg0);
 		}
-		if (arg0.getSource() == tblCama) {
-			mouseEnteredTblCama(arg0);
+		if (arg0.getSource() == tblVendedores) {
+			mouseEnteredTblVendedores(arg0);
 		}
 	}
 	public void mouseExited(MouseEvent arg0) {
@@ -401,8 +401,8 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
 		habilitarBotones(true);
 		editarFila();
 	}
-	protected void mouseEnteredTblCama(MouseEvent arg0) {
-		tblCama.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	protected void mouseEnteredTblVendedores(MouseEvent arg0) {
+		tblVendedores.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	protected void mouseEnteredBtnAdicionar(MouseEvent arg0) {
 		btnAdicionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -418,7 +418,7 @@ public class DlgVendedores extends JDialog implements ActionListener, KeyListene
 	}
 	//  M�todos tipo void (sin par�metros)
 	void ajustarAnchoColumnas() {
-		TableColumnModel tcm = tblCama.getColumnModel();
+		TableColumnModel tcm = tblVendedores.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(anchoColumna(25));
 		tcm.getColumn(1).setPreferredWidth(anchoColumna(25));
 		tcm.getColumn(2).setPreferredWidth(anchoColumna(25)); 
