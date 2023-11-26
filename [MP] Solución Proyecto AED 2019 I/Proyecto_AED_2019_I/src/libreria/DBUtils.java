@@ -10,7 +10,6 @@ import clases.Cliente;
 import clases.Factura;
 import clases.Producto;
 import clases.Vendedor;
-import com.sun.security.ntlm.Client;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -63,7 +62,7 @@ public class DBUtils {
                 if(!file.exists())
                     file.createNewFile();
                 String linea;
-                String[] stringCarga;
+                String[] StringCarga;
                 BufferedReader br = new BufferedReader(new FileReader(target+".txt"));
                 while ((linea=br.readLine()) != null) {
                         switch(target){
@@ -209,5 +208,6 @@ public class DBUtils {
                     return ((Factura) lista.get(lista.size() - 1)).getCodigoFactura() + 1;
         }
         return 0;
-    } 
+    }
+
 }

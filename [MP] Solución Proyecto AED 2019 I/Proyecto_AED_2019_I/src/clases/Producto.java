@@ -35,8 +35,12 @@ public class Producto {
         
         this.setCodigoProducto(Integer.parseInt(stringCarga[0].trim()));
         this.setDescripcion(stringCarga[1].trim());
+<<<<<<< Updated upstream
         this.setUnidades(Double.parseDouble(stringCarga[2].trim()));
         this.setPrecio(Double.parseDouble(stringCarga[3].trim()));
+=======
+        this.setPrecio(Double.parseDouble(stringCarga[2].trim()));
+>>>>>>> Stashed changes
 
     }
        

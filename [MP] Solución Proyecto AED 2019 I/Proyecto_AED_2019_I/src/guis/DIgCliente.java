@@ -52,7 +52,7 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 	private JButton btnAdicionar;
 	private JButton btnModificar;
 	private JButton btnEliminar;
-	private JTable tblVendedores;
+	private JTable tblClientes;
 	private DefaultTableModel modelo;
         private ArrayList<Cliente> lstClientes = new ArrayList<>();
 
@@ -205,13 +205,13 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
     
     //<editor-fold defaultstate="collapsed" desc="Metodos Genericos">
     public int calcularCorrelativo(){
-        return DBUtils.numeroCorrelativo(new ArrayList(lstClientes) , "clientes");
+        return DBUtils.numeroCorrelativo(new ArrayList<>(lstClientes) , "clientes");
     }
     void listar() {
         lstClientes = DBUtils.parsearListaCliente(DBUtils.cargarData("clientes"));
         int posFila = 0;
         if (modelo.getRowCount() > 0)
-                posFila = tblVendedores.getSelectedRow();
+                posFila = tblClientes.getSelectedRow();
         if (modelo.getRowCount() == lstClientes.size()- 1)
                 posFila = lstClientes.size() - 1;
         if (posFila == lstClientes.size())
@@ -224,10 +224,10 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
                 modelo.addRow(fila);
         }
         if (lstClientes.size() > 0)
-                tblVendedores.getSelectionModel().setSelectionInterval(posFila, posFila);
+                tblClientes.getSelectionModel().setSelectionInterval(posFila, posFila);
     }
     void guardar() {
-            DBUtils.grabarData(new ArrayList(lstClientes), "vendedores");
+            DBUtils.grabarData(new ArrayList<>(lstClientes), "clientes");
     }
     //</editor-fold>
     
@@ -308,7 +308,7 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 	}
 	protected void actionPerformedBtnAceptar(ActionEvent arg0) {
                 
-                int codigoVendedor = Integer.parseInt(txtCodigoCliente.getText().trim());
+                int CodigoCliente = Integer.parseInt(txtCodigoCliente.getText().trim());
                 String nombres = txtNombres.getText().trim();
                 String apellidos = txtApellidos.getText().trim();
                 String telefono = txtTelefono.getText().trim();
@@ -327,8 +327,8 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 		}
 		if (btnModificar.isEnabled() == false) {
                         Cliente clienteModificar = new Cliente();
-                        for (Cliente vendedor : lstClientes) {
-                            if(vendedor.getCodigoCliente() == Integer.parseInt(txtCodigoCliente.getText().trim()))
+                        for (Cliente cliente : lstClientes) {
+                            if(cliente.getCodigoCliente() == Integer.parseInt(txtCodigoCliente.getText().trim()))
                                 clienteModificar = cliente;
                         }
                         clienteModificar.setNombres(nombres);
@@ -351,8 +351,8 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 	public void keyTyped(KeyEvent arg0) {
 	}
 	public void mouseClicked(MouseEvent arg0) {
-		if (arg0.getSource() == tblVendedores) {
-			mouseClickedTblCama(arg0);
+		if (arg0.getSource() == tblClientes) {
+			mouseEnteredTblClientes(arg0);
 		}
 	}
 	public void mouseEntered(MouseEvent arg0) {
@@ -378,13 +378,13 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 	}
 	public void mouseReleased(MouseEvent arg0) {
 	}
-	protected void mouseClickedTblCama(MouseEvent arg0) {
+	protected void mouseEnteredTblClientes(MouseEvent arg0) {
 		habilitarEntradas(false);
 		habilitarBotones(true);
 		editarFila();
 	}
 	protected void mouseEnteredTblVendedores(MouseEvent arg0) {
-		tblVendedores.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		tblClientes.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	protected void mouseEnteredBtnAdicionar(MouseEvent arg0) {
 		btnAdicionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -406,7 +406,6 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 		tcm.getColumn(2).setPreferredWidth(anchoColumna(25)); 
 		tcm.getColumn(3).setPreferredWidth(anchoColumna(25));  
                 tcm.getColumn(4).setPreferredWidth(anchoColumna(25));
-                tcm.getColumn(5).setPreferredWidth(anchoColumna(25));
 	}
 	
 	//  M�todos tipo void (con par�metros)

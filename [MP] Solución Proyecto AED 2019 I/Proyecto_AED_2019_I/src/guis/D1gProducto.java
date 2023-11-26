@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import libreria.DBUtils;
 
-public class DIgProducto extends JDialog implements ActionListener, KeyListener, MouseListener {
+public class D1gProducto extends JDialog implements ActionListener, KeyListener, MouseListener {
 	
 	private JLabel lblImgCama;
         //
@@ -61,7 +61,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DIgProducto dialog = new DIgProducto();
+					D1gProducto dialog = new D1gProducto();
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 				}
@@ -75,7 +75,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 	/**
 	 * Create the dialog.
 	 */
-	public DIgProducto() {
+	public D1gProducto() {
             setResizable(false);
             setTitle("Mantenimiento | Productos");
             setBounds(100, 100, 1600, 800);
@@ -211,6 +211,8 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
         for (int i=0; i<lstProductos.size(); i++) {
                 x = lstProductos.get(i);
                 Object[] fila = { x.getCodigoProducto(), x.getDescripcion(), x.getUnidades(), x.getPrecio()};
+
+                Object[] fila = { x.getCodigoProducto(), x.getDescripcion(), x.getPrecio()};
                 modelo.addRow(fila);
         }
         if (lstProductos.size() > 0)
@@ -311,7 +313,7 @@ public class DIgProducto extends JDialog implements ActionListener, KeyListener,
 
 		
 		if (btnAdicionar.isEnabled() == false) {
-			Producto producto = new Producto(codigoProducto, descripcion, unidades, precio);
+			Producto producto = new Producto(codigoProducto(), descripcion, unidades, precio);
                         lstProductos.add(producto);
 			guardar();
 			btnAdicionar.setEnabled(true);
