@@ -19,6 +19,8 @@ import java.util.ArrayList;
  * @author dylan
  */
 public class DBUtils {
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos Genericos">
     public static void grabarData(ArrayList<Object> lista, String target) {
         try {                    
                 PrintWriter pw = new PrintWriter(new FileWriter(target+ ".txt"));
@@ -62,6 +64,21 @@ public class DBUtils {
         return lista;
     }
     
+    public static ArrayList<Object> buscarDataCodigo(String target, String paramBusqueda) {
+        ArrayList<Object> matches = new ArrayList();
+        switch(target){
+            case "vendedores":
+                ArrayList<Vendedor> lista = parsearListaVendedor(cargarData(target));
+                for (Vendedor vendedor : lista) {
+                    if(String.valueOf(vendedor.getCodigoVendedor()).contains(paramBusqueda))
+                        matches.add(vendedor);
+                }
+        }
+        return matches;
+    }
+    //<editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos De Parseo Lista">
     public static ArrayList<Vendedor> parsearListaVendedor(ArrayList<Object> param){
         ArrayList<Vendedor> listaVendedor = new ArrayList<>();
 
@@ -75,6 +92,7 @@ public class DBUtils {
         }
         return listaVendedor;
     }
+    //<editor-fold>
     
     public static int numeroCorrelativo(ArrayList<Object> lista, String target) {
         switch(target){
@@ -85,5 +103,5 @@ public class DBUtils {
                     return ((Vendedor) lista.get(lista.size() - 1)).getCodigoVendedor();
         }
         return 0;
-    }
+    } 
 }
