@@ -24,6 +24,9 @@ public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
 	private JMenu mnPago;
 	private JMenu mnReporte;
 	private JMenuItem mntmSalir;
+        private JMenuItem mntmVendedores;
+        
+        
 	private JMenuItem mntmCama;
 	private JMenuItem mntmPaciente;
 	private JMenuItem mntmMedicina;	
@@ -58,7 +61,7 @@ public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public Proyecto_AED_2019_I() {
-		int ANCHO = 750, ALTO = 500,
+		int ANCHO = 1600, ALTO = 800,
 			DX = 6, DY = 52;
 		
 		setResizable(false);
@@ -80,6 +83,12 @@ public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
 		
 		mnMantenimiento = new JMenu("Mantenimiento");
 		menuProyecto.add(mnMantenimiento);
+                
+                mntmVendedores = new JMenuItem("Vendedores");
+		mntmVendedores.addActionListener(this);
+		mnMantenimiento.add(mntmVendedores);
+                
+                //
 		
 		mntmCama = new JMenuItem("Cama");
 		mntmCama.addActionListener(this);
@@ -139,12 +148,19 @@ public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		lblFondo = new JLabel(new ImageIcon("imagenes/MN-Global.jpg"));
+		lblFondo = new JLabel(new ImageIcon("imagenes/imgMenuFondo.jpg"));
 		lblFondo.setBounds(0, 0, ANCHO, ALTO);
 		getContentPane().add(lblFondo);	
 	}
 
 	public void actionPerformed(ActionEvent e) {
+                // Nuevo
+                if(e.getSource() == mntmVendedores){
+                    DlgVendedores dlgVendedores = new DlgVendedores();
+                    dlgVendedores.setLocationRelativeTo(this);
+                    dlgVendedores.setVisible(true);
+                }
+                // Viejo
 		if (e.getSource() == mntmInternamientosPagados) {
 			actionPerformedMntmInternamientosPagados(e);
 		}
