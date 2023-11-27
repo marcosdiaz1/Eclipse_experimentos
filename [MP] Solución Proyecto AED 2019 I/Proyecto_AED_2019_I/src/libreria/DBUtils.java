@@ -123,6 +123,34 @@ public class DBUtils {
         }
         return matches;
     }
+    
+    public static ArrayList<Object> buscarDataTexto(String target, String paramBusqueda) {
+        ArrayList<Object> matches = new ArrayList();
+        switch(target){
+            case "vendedores":
+                ArrayList<Vendedor> listaVendedor = parsearListaVendedor(cargarData(target));
+                for (Vendedor vendedor : listaVendedor) {
+                    if((vendedor.getNombres() + " " + vendedor.getApellidos()).contains(paramBusqueda))
+                        matches.add(vendedor);
+                }
+                break;
+            case "productos":
+                ArrayList<Producto> listaProducto = parsearListaProducto(cargarData(target));
+                for (Producto producto : listaProducto) {
+                    if(producto.getDescripcion().contains(paramBusqueda))
+                        matches.add(producto);
+                }
+                break;
+            case "clientes":
+                ArrayList<Cliente> listaCliente = parsearListaCliente(cargarData(target));
+                for (Cliente cliente : listaCliente) {
+                    if((cliente.getNombres() + " " + cliente.getApellidos()).contains(paramBusqueda))
+                        matches.add(cliente);
+                }
+                break;
+        }
+        return matches;
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos De Parseo Lista">

@@ -23,7 +23,12 @@ public class Vendedor {
     private String telefono;
     private String dni;
 
-    public Vendedor(){}
+    public Vendedor(){
+        nombres = "";
+        apellidos = "";
+        telefono = "";
+        dni = "";
+    }
 
     public Vendedor(int codigoVendedor, int categoria, String nombres, String apellidos, String telefono, String dni ) {
         this.codigoVendedor = codigoVendedor;

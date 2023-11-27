@@ -20,7 +20,9 @@ public class Producto {
     private String descripcion;
     private double precio;
 
-    public Producto(){}
+    public Producto(){
+        descripcion = "";
+    }
 
     public Producto(int codigoProducto, String descripcion, double precio) {
         this.codigoProducto = codigoProducto;

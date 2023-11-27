@@ -5,7 +5,12 @@
  */
 package libreria;
 
+import clases.Cliente;
+import clases.Factura;
+import clases.Producto;
+import clases.Vendedor;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,17 +29,23 @@ public class Autocomplete implements DocumentListener {
   };
 
   private JTextField textField;
-  private final List<String> keywords;
+  private Object lstMatches;
+  private Object match;
+  private String target;
   private Mode mode = Mode.INSERT;
 
-  public Autocomplete(JTextField textField, List<String> keywords) {
+  public Autocomplete(JTextField textField, Object lstMatches, String target) {
     this.textField = textField;
-    this.keywords = keywords;
-    Collections.sort(keywords);
+    this.lstMatches = lstMatches;
+    this.target = target;
   }
   
   public Mode getMode(){
       return mode;
+  }
+  
+  public Object getMatch(){
+      return match;
   }
 
   @Override
@@ -43,6 +54,28 @@ public class Autocomplete implements DocumentListener {
 
   @Override
   public void removeUpdate(DocumentEvent ev) { 
+  }
+  
+  private List<String> getKeyWords(){
+      List<String> keyWords = new ArrayList<>();
+      switch(target){
+            case "vendedores":
+                for (Object match : (ArrayList<Vendedor>)lstMatches) {
+                    keyWords.add(((Vendedor) match).getNombres() + " " + ((Vendedor) match).getApellidos());
+                }
+                break;
+            case "productos":
+                for (Object match : (ArrayList<Producto>)lstMatches) {
+                    keyWords.add(((Producto) match).getDescripcion());
+                }
+                break;
+            case "clientes":
+                for (Object match : (ArrayList<Cliente>)lstMatches) {
+                    keyWords.add(((Cliente) match).getNombres() + " " + ((Cliente) match).getApellidos());
+                }
+                break;
+        }
+      return keyWords;
   }
 
   @Override
@@ -66,21 +99,29 @@ public class Autocomplete implements DocumentListener {
     }
 
     String prefix = content.substring(w + 1);
-    int n = Collections.binarySearch(keywords, prefix);
+    
+    List<String> keywords = getKeyWords();
+    int n = keywords.indexOf(prefix);
         
     if(prefix.isEmpty())
         n = 0;
     
-    if (n < 0 && -n <= keywords.size()) {
-      String match = keywords.get(-n - 1);
-      if (match.startsWith(prefix)) {
-        // A completion is found
-        String completion = match.substring(pos - w);
-        
-        // We cannot modify Document from within notification,
-        // so we submit a task that does the change later
-        SwingUtilities.invokeLater(new CompletionTask(completion, pos + 1));
+    boolean matchedWord = false;
+      for (int i = 0; i < keywords.size(); i++) {
+        if(keywords.get(i).startsWith(prefix)){
+            matchedWord = true;
+            match = ((ArrayList<Object>)lstMatches).get(i);
+            // A completion is found
+          String completion = keywords.get(i).substring(pos - w);
+
+          // We cannot modify Document from within notification,
+          // so we submit a task that does the change later
+          SwingUtilities.invokeLater(new CompletionTask(completion, pos + 1));
+          break;
+        }          
       }
+    if(matchedWord){
+        mode = Mode.COMPLETION;
     }
     else {
       // Nothing found

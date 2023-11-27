@@ -22,7 +22,12 @@ public class Cliente {
     private String telefono;
     private String dni;
 
-    public Cliente(){}
+    public Cliente(){
+        nombres = "";
+        apellidos = "";
+        telefono = "";
+        dni = "";
+    }
 
     public Cliente(int codigoCliente, String nombres, String apellidos, String telefono, String dni ) {
         this.codigoCliente = codigoCliente;
