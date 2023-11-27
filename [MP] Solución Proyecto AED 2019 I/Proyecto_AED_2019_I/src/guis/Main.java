@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
+public class Main extends JFrame implements ActionListener {
 
 	private JLabel lblFondo;
 	private JMenuBar menuProyecto;
@@ -36,7 +36,7 @@ public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Proyecto_AED_2019_I frame = new Proyecto_AED_2019_I();
+					Main frame = new Main();
 					frame.setVisible(true);
 				}
 				catch (Exception e) {
@@ -49,12 +49,12 @@ public class Proyecto_AED_2019_I extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Proyecto_AED_2019_I() {
+	public Main() {
 		int ANCHO = 1600, ALTO = 800,
 			DX = 6, DY = 52;
 		
 		setResizable(false);
-		setTitle("MN-Global >>> PrimaTaxi >>> Solution Proyecto AED 2019 I - 05/07/2019");
+		setTitle("Solution Proyecto 2023");
 		setIconImage(new ImageIcon("imagenes/PrimaTaxi.png").getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(ANCHO + DX, ALTO + DY);
