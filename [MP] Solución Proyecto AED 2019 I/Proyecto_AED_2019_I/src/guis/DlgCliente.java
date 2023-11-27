@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import libreria.DBUtils;
 
-public class DIgCliente extends JDialog implements ActionListener, KeyListener, MouseListener {
+public class DlgCliente extends JDialog implements ActionListener, KeyListener, MouseListener {
 	
 	private JLabel lblImgCama;
         //
@@ -63,7 +63,7 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DIgCliente dialog = new DIgCliente();
+					DlgCliente dialog = new DlgCliente();
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 				}
@@ -77,7 +77,7 @@ public class DIgCliente extends JDialog implements ActionListener, KeyListener, 
 	/**
 	 * Create the dialog.
 	 */
-	public DIgCliente() {
+	public DlgCliente() {
             setResizable(false);
             setTitle("Mantenimiento | Clientes");
             setBounds(100, 100, 1600, 800);

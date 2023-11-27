@@ -412,9 +412,36 @@ public class DlgVentas extends JDialog implements ActionListener, KeyListener, M
 	}
 	protected void actionPerformedBtnAceptar(ActionEvent arg0) {
                 int codigoFactura = Integer.parseInt(txtCabeceraNroSerie.getText().trim());
-                int codigoProducto = ((Producto)autoCompleteProducto.getMatch()).getCodigoProducto();
-                int codigoCliente = ((Cliente)autoCompleteCliente.getMatch()).getCodigoCliente();
-                int codigoVendedor = ((Vendedor)autoCompleteVendedor.getMatch()).getCodigoVendedor();
+                
+                Producto producto = ((Producto)autoCompleteProducto.getMatch());
+                Cliente cliente = ((Cliente)autoCompleteCliente.getMatch());
+                Vendedor vendedor = ((Vendedor)autoCompleteVendedor.getMatch());
+                
+                int codigoVendedor;
+                int codigoProducto;
+                int codigoCliente;
+                
+                if(producto != null){
+                    codigoProducto = producto.getCodigoProducto();
+                }
+                else{
+                    codigoProducto = lstFacturas.get(tblVentas.getSelectedRow()).getProducto().getCodigoProducto();
+                }
+                
+                if(cliente != null){
+                    codigoCliente = cliente.getCodigoCliente();
+                }
+                else{
+                    codigoCliente = lstFacturas.get(tblVentas.getSelectedRow()).getCliente().getCodigoCliente();
+                }
+                
+                if(vendedor != null){
+                    codigoVendedor = vendedor.getCodigoVendedor();
+                }
+                else{
+                    codigoVendedor = lstFacturas.get(tblVentas.getSelectedRow()).getVendedor().getCodigoVendedor();
+                }
+                
                 double precio = Double.parseDouble(txtCuerpoPrecio.getText().trim());
                 int unidades = Integer.parseInt(txtCuerpoUnidades.getText().trim());
                 //Calcular Total
